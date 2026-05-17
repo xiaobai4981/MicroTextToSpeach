@@ -16,5 +16,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "SherpaOnnxTtsEngine"
+rootProject.name = "MicroTextToSpeach"
 include(":app")

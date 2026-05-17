@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,11 +11,11 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "org.woheller69.ttsengine"
+        applicationId = "com.huzhou.microtexttospeach"
         minSdk = 29
         targetSdk = 35
-        versionCode = 31
-        versionName = "3.1"
+        versionCode = 1
+        versionName = "1.0"
 
         vectorDrawables {
             useSupportLibrary = true
@@ -25,6 +28,20 @@ android {
         }
     }
 
+    signingConfigs {
+        val keystorePropertiesFile = rootProject.file("keystore.properties")
+        val keystoreProperties = Properties()
+
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+
+        create("basic") {
+            storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
+            storePassword = keystoreProperties.getProperty("storePassword")
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -32,6 +49,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("basic")
+
             ndk {
                 abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
             }
@@ -69,8 +88,9 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
-    implementation("com.github.k2-fsa:sherpa-onnx:v1.10.42")
     implementation("androidx.preference:preference:1.2.1")
-    implementation("com.github.woheller69:FreeDroidWarn:+")
+    implementation("com.github.woheller69:FreeDroidWarn:V1.13")
     implementation("org.jsoup:jsoup:1.22.1")
+
+    implementation(files("libs/sherpa-onnx-1.13.2.aar"))
 }
